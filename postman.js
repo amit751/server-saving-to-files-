@@ -8,8 +8,12 @@ const fs = require("fs");
 let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
 objs = JSON.parse(objs);
 console.log(objs);
+// let todos = objs["todos"];
+// console.log(todos);
+// console.log(todos.length);
 const data = {first: 0};
 objs.todos.push(data);
+
 // fs.appendFileSync('./db/all-objs.json', 
 // JSON.stringify(objs), 
 //   { encoding: "utf8", flag: "w" } 
@@ -42,34 +46,90 @@ app.get("/api/:id", (request, response) => {
 
 app.post("/api", (request, response) => {
   const { body } = request;
-  const objs = fs.readFileSync('.db/all-objs.json',{encoding:'utf8', flag:'r'});
-  objs = JSON.parse(objs);
+  console.log(body);
   
-  try {
-    fs.writeFileSync(
-      `./db/object-${id}.json`,
-      JSON.stringify(body, null, 4)
-    );
-    fs.writeFileSync(
-      `./db/object-${id}.json`,
-      JSON.stringify(body, null, 4)
-    );
-    response.status(201).send("greet added");
-  } catch (e) {
-    response.status(500).json({ message: "Error!", error: e });
-  }
+  
+  
+  
+  
+  
+  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
+  objs = JSON.parse(objs);
+  let newObj =body;
+  let todos = objs["todos"];
+  console.log(todos);
+  console.log(todos.length);
+  newObj["id"]=todos.length;
+  objs["todos"].push(newObj);
+  fs.writeFileSync(
+    './db/all-objs.json',
+    JSON.stringify(objs, null, 4)
+  );
+
+  response.send(newObj);
+  
+  
+  
+  // console.log(objs);
+  // console.log(objs["todos"].lenght);
+  // let id = objs["todos"].lenght;
+  // console.log(id);
+  // newObj["id"] = id ;
+  // console.log(newObj["id"] );
+  // objs["todos"].push(newObj);
+  // fs.writeFileSync(
+  //   './db/all-objs.json',
+  //   JSON.stringify(objs, null, 4)
+  // );
+
+  
+
+  
+  // try {
+  //   fs.writeFileSync(
+  //     `./db/object-${id}.json`,
+  //     JSON.stringify(body, null, 4)
+  //   );
+  //   fs.writeFileSync(
+  //     `./db/object-${id}.json`,
+  //     JSON.stringify(body, null, 4)
+  //   );
+  //   response.status(201).send("greet added");
+  // } catch (e) {
+  //   response.status(500).json({ message: "Error!", error: e });
+  // }
 });
 
-app.put("api/:id", (request, response) => {
-  const { created } = request.params;
-  const { body } = request;
-  try {
-    fs.writeFileSync(
-      `./greets/greet-${created}.json`,
-      JSON.stringify(body, null, 4)
-    );
-    response.json(body);
-  } catch (e) {
-    response.status(500).json({ message: "Error!", error: e });
-  }
-});
+// app.post("/api", (request, response) => {
+//   const { body } = request;
+//   const objs = fs.readFileSync('.db/all-objs.json',{encoding:'utf8', flag:'r'});
+//   objs = JSON.parse(objs);
+  
+//   try {
+//     fs.writeFileSync(
+//       `./db/object-${id}.json`,
+//       JSON.stringify(body, null, 4)
+//     );
+//     fs.writeFileSync(
+//       `./db/object-${id}.json`,
+//       JSON.stringify(body, null, 4)
+//     );
+//     response.status(201).send("greet added");
+//   } catch (e) {
+//     response.status(500).json({ message: "Error!", error: e });
+//   }
+// });
+
+// app.put("api/:id", (request, response) => {
+//   const { created } = request.params;
+//   const { body } = request;
+//   try {
+//     fs.writeFileSync(
+//       `./greets/greet-${created}.json`,
+//       JSON.stringify(body, null, 4)
+//     );
+//     response.json(body);
+//   } catch (e) {
+//     response.status(500).json({ message: "Error!", error: e });
+//   }
+// });
