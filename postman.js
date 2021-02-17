@@ -5,28 +5,40 @@ app.listen(3000 , ()=> { console.log("lissning at 3000")} );
 
 app.use(express.json());
 const fs = require("fs");
+const objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
 
+console.log(JSON.parse(objs));
 
-
+fs.appendFileSync('./db/all-objs.json', 
+JSON.stringify({test: 5 , use: 4}), 
+  { encoding: "utf8", flag: "w" } 
+); 
 
 
 /////nitzan:
 
 
-app.get("/", (request, response) => {
+app.get("/api", (request, response) => {
   response.send("Hello everyone!");
 });
 
-app.get("/:id", (request, response) => {
+app.get("/api/:id", (request, response) => {
   const { id } = request.params;
   response.send(`Hello ${id}!`);
 });
 
-app.post("/", (request, response) => {
+app.post("/api", (request, response) => {
   const { body } = request;
+  const objs = fs.readFileSync('.db/all-objs.json',{encoding:'utf8', flag:'r'});
+  objs = JSON.parse(objs);
+  
   try {
     fs.writeFileSync(
-      `./greets/greet-${Date.now()}.json`,
+      `./db/object-${id}.json`,
+      JSON.stringify(body, null, 4)
+    );
+    fs.writeFileSync(
+      `./db/object-${id}.json`,
       JSON.stringify(body, null, 4)
     );
     response.status(201).send("greet added");
@@ -35,7 +47,7 @@ app.post("/", (request, response) => {
   }
 });
 
-app.put("/:created", (request, response) => {
+app.put("api/:id", (request, response) => {
   const { created } = request.params;
   const { body } = request;
   try {
