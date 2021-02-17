@@ -1,0 +1,22 @@
+{
+  "name": "npm-server",
+  "version": "1.0.0",
+  "description": "creating a server, tat works as a data base , by writing new data to files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amit751/server-saving-to-files-.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amit751/server-saving-to-files-/issues"
+  },
+  "homepage": "https://github.com/amit751/server-saving-to-files-#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
