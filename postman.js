@@ -5,21 +5,26 @@ app.listen(3000 , ()=> { console.log("lissning at 3000")} );
 
 app.use(express.json());
 const fs = require("fs");
-const objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
+let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
+objs = JSON.parse(objs);
+console.log(objs);
+const data = {first: 0};
+objs.todos.push(data);
+// fs.appendFileSync('./db/all-objs.json', 
+// JSON.stringify(objs), 
+//   { encoding: "utf8", flag: "w" } 
+// ); 
 
-console.log(JSON.parse(objs));
-
-fs.appendFileSync('./db/all-objs.json', 
-JSON.stringify({test: 5 , use: 4}), 
-  { encoding: "utf8", flag: "w" } 
-); 
-
-
+fs.writeFileSync(
+  './db/all-objs.json',
+  JSON.stringify(objs, null, 4)
+);
 /////nitzan:
 
 
 app.get("/api", (request, response) => {
-  response.send("Hello everyone!");
+  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
+  response.send(objs);
 });
 
 app.get("/api/:id", (request, response) => {
