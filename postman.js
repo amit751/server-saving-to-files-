@@ -47,12 +47,6 @@ app.get("/api/:id", (request, response) => {
 app.post("/api", (request, response) => {
   const { body } = request;
   console.log(body);
-  
-  
-  
-  
-  
-  
   let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
   objs = JSON.parse(objs);
   let newObj =body;
@@ -68,20 +62,6 @@ app.post("/api", (request, response) => {
 
   response.send(newObj);
   
-  
-  
-  // console.log(objs);
-  // console.log(objs["todos"].lenght);
-  // let id = objs["todos"].lenght;
-  // console.log(id);
-  // newObj["id"] = id ;
-  // console.log(newObj["id"] );
-  // objs["todos"].push(newObj);
-  // fs.writeFileSync(
-  //   './db/all-objs.json',
-  //   JSON.stringify(objs, null, 4)
-  // );
-
   
 
   
@@ -99,6 +79,78 @@ app.post("/api", (request, response) => {
   //   response.status(500).json({ message: "Error!", error: e });
   // }
 });
+
+
+// app.put("api/:id", (request, response) => {
+//   const { id } = request.params;
+//   const { body } = request;
+ 
+//   let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
+//   objs = JSON.parse(objs);
+//   let toUpdateObj;
+//   for (const obj of objs.todos) {
+//     if(obj.id === Number(id)){
+//        data = JSON.stringify(obj);
+//     }
+//   }
+//   response.send(data);
+  
+  
+//   try {
+//     fs.writeFileSync(
+//       `./greets/greet-${created}.json`,
+//       JSON.stringify(body, null, 4)
+//     );
+//     response.json(body);
+//   } catch (e) {
+//     response.status(500).json({ message: "Error!", error: e });
+//   }
+// });
+
+
+// app.put("api/", (request, response) => {
+//   const { body } = request;
+//   console.log(body);
+//   fs.writeFileSync(
+//     './db/all-objs.json',
+//     JSON.stringify(body, null, 4)
+//   );
+
+//   response.send(JSON.stringify(body));
+
+
+// });
+
+
+app.put("/api", (request, response) => {
+  
+  const { body } = request;
+ 
+    
+  console.log(body);
+  
+  fs.writeFileSync(
+    './db/all-objs.json',
+    JSON.stringify(body, null, 4)
+  );
+
+  response.send(JSON.stringify(body));
+  
+  
+  // try {
+  //   fs.writeFileSync(
+  //     `./greets/greet-${created}.json`,
+  //     JSON.stringify(body, null, 4)
+  //   );
+  //   response.json(body);
+  // } catch (e) {
+  //   response.status(500).json({ message: "Error!", error: e });
+  // }
+});
+
+
+
+
 
 // app.post("/api", (request, response) => {
 //   const { body } = request;
@@ -120,16 +172,3 @@ app.post("/api", (request, response) => {
 //   }
 // });
 
-// app.put("api/:id", (request, response) => {
-//   const { created } = request.params;
-//   const { body } = request;
-//   try {
-//     fs.writeFileSync(
-//       `./greets/greet-${created}.json`,
-//       JSON.stringify(body, null, 4)
-//     );
-//     response.json(body);
-//   } catch (e) {
-//     response.status(500).json({ message: "Error!", error: e });
-//   }
-// });
