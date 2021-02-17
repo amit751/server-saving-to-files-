@@ -7,7 +7,7 @@ app.use(express.json());
 const fs = require("fs");
 let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
 objs = JSON.parse(objs);
-console.log(objs);
+// console.log(objs);
 // let todos = objs["todos"];
 // console.log(todos);
 // console.log(todos.length);
@@ -81,45 +81,45 @@ app.post("/api", (request, response) => {
 });
 
 
-// app.put("api/:id", (request, response) => {
-//   const { id } = request.params;
-//   const { body } = request;
+app.put("/api/:id", (request, response) => {
+  const { id } = request.params;
+  const { body } = request;
  
-//   let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
-//   objs = JSON.parse(objs);
-//   let toUpdateObj;
-//   for (const obj of objs.todos) {
-//     if(obj.id === Number(id)){
-//        data = JSON.stringify(obj);
-//     }
-//   }
-//   response.send(data);
+  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
+  objs = JSON.parse(objs);
+  console.log(objs);
+  for (let i =0; i< objs["todos"].length ; i++) {
+    console.log(objs["todos"][i]["id"]);
+    console.log(objs["todos"][i]);
+    if(objs["todos"][i] === id){
+      objs["todos"][i] = 12;///////////////wrong
+       console.log(objs["todos"][i]);
+    }
+  }
+  
+  fs.writeFileSync(
+    './db/all-objs.json',
+    JSON.stringify( objs, null, 4)
+  );
   
   
-//   try {
-//     fs.writeFileSync(
-//       `./greets/greet-${created}.json`,
-//       JSON.stringify(body, null, 4)
-//     );
-//     response.json(body);
-//   } catch (e) {
-//     response.status(500).json({ message: "Error!", error: e });
-//   }
-// });
+  
+  response.send(body);
+  
+  
+  // try {
+  //   fs.writeFileSync(
+  //     `./greets/greet-${created}.json`,
+  //     JSON.stringify(body, null, 4)
+  //   );
+  //   response.json(body);
+  // } catch (e) {
+  //   response.status(500).json({ message: "Error!", error: e });
+  // }
+});
 
 
-// app.put("api/", (request, response) => {
-//   const { body } = request;
-//   console.log(body);
-//   fs.writeFileSync(
-//     './db/all-objs.json',
-//     JSON.stringify(body, null, 4)
-//   );
 
-//   response.send(JSON.stringify(body));
-
-
-// });
 
 
 app.put("/api", (request, response) => {
