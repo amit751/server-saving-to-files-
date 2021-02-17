@@ -29,7 +29,15 @@ app.get("/api", (request, response) => {
 
 app.get("/api/:id", (request, response) => {
   const { id } = request.params;
-  response.send(`Hello ${id}!`);
+  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
+  objs = JSON.parse(objs);
+  let data;
+  for (const obj of objs.todos) {
+    if(obj.id === Number(id)){
+       data = JSON.stringify(obj);
+    }
+  }
+  response.send(data);
 });
 
 app.post("/api", (request, response) => {
