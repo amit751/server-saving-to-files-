@@ -22,13 +22,12 @@ const fs = require("fs");
 
 
 // BUGS
-// -post request with "
+// -post request with invalid json
 
 
 
 // create a new file with the content of req.body
 app.post("/b", (request, response) => {
-  console.log(app);
   try {
     const { body } = request;
     // CHECKING FOR ERRORS
@@ -65,17 +64,47 @@ app.post("/b", (request, response) => {
 });
 
 
+
+
 app.put("/b/:id", (request, response) => {
-  const { id } = request.params;
-  const { body } = request;
-  fs.writeFileSync(`./db/bins/bin-${id}.json`,JSON.stringify(body, null, 4));
-  response.status(200).send({
-  "record": true ,
-  "metadata": {
-  "id": id,
-  "createdAt": new Date(),
+  try {
+    const { id } = request.params;
+    const { body } = request;
+    console.log(!isNaN(id));
+    // CHECKING FOR ERRORS
+    // REQUIREMENT: headers = {'content-type': 'application/json'}
+    if (!('content-type' in request.headers && request.headers['content-type'] === 'application/json')) {
+      throw ({status: 400, message: 'Bad Request - Expected Content-Type to be application/json'});
+    }
+    // REQUIREMENT: body not empty
+    else if (JSON.stringify(body) === JSON.stringify({})) {
+      throw ({status: 400, message: 'Bad Request - Bin cannot be blank'});
+    }
+    // REQUIREMENT: invalid id provided
+    else if(isNaN(id)) {
+      throw ({status: 400, message: 'Bad Request - Invalid Bin Id provided'});
+    }
+    // REQUIREMENT: bin not found
+    else if(!isInBins(id)) { 
+      throw ({status: 404, message: 'Not Found - Bin not found'});
+    }
+    fs.writeFileSync(`./db/bins/bin-${id}.json`,JSON.stringify(body, null, 4));
+    response.status(200).send({
+      "record": true ,
+      "metadata": {
+        "id": id,
+        "createdAt": new Date(),
+      }
+    });
+  
   }
-});
+  catch (e) {
+    if(typeof(e) === 'object' && e !== null) {
+      response.status(e.status).send(e.message);
+    } else {
+      response.status(500).send(e);
+    }
+  }
 });
 
 
@@ -123,3 +152,12 @@ app.delete("/b/:id" , (request , response) => {
       }
   });
 });
+
+// returns true if bin was found by id 
+function isInBins(id) {
+  const binsFolder = fs.readdirSync('./db/bins');
+  const matchBin = binsFolder.filter((bin) => {
+    return bin === `bin-${id}.json`;
+  })
+  return Boolean(matchBin[0]);
+}
