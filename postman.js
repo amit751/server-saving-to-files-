@@ -1,83 +1,34 @@
+const { Console } = require("console");
 const express = require (`express`);
 const app = express();
+
 app.listen(3000 , ()=> { console.log("lissning at 3000")} );
 
 
 app.use(express.json());
 const fs = require("fs");
-let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
-objs = JSON.parse(objs);
-// console.log(objs);
-// let todos = objs["todos"];
-// console.log(todos);
-// console.log(todos.length);
-const data = {first: 0 ,id:4};
-objs.todos.push(data);
-
-// fs.appendFileSync('./db/all-objs.json', 
-// JSON.stringify(objs), 
-//   { encoding: "utf8", flag: "w" } 
-// ); 
-
-fs.writeFileSync(
-  './db/all-objs.json',
-  JSON.stringify(objs, null, 4)
-);
-/////nitzan:
 
 
-app.get("/api", (request, response) => {
-  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
-  response.send(objs);
-});
 
-app.get("/api/:id", (request, response) => {
-  const { id } = request.params;
-  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
-  objs = JSON.parse(objs);
-  let data;
-  for (const obj of objs.todos) {
-    if(obj.id === Number(id)){
-       data = JSON.stringify(obj);
-    }
-  }
-  response.send(data);
-});
 
-app.post("/api", (request, response) => {
+
+// create a new file with the content of req.body
+app.post("/b", (request, response) => {
   const { body } = request;
-  console.log(body);
-  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
-  objs = JSON.parse(objs);
-  let newObj =body;
-  let todos = objs["todos"];
-  console.log(todos);
-  console.log(todos.length);
-  newObj["id"]=todos.length;
-  objs["todos"].push(newObj);
-  fs.writeFileSync(
-    './db/all-objs.json',
-    JSON.stringify(objs, null, 4)
-  );
+  let counterObj = JSON.parse(fs.readFileSync('./db/counter.json',{encoding:'utf8', flag:'r'}));
+  counterObj["id"] +=  1 ;
+  const counter = counterObj["id"];
 
-  response.send(newObj);
+  fs.writeFileSync('./db/counter.json',JSON.stringify(counterObj, null, 4));
+  fs.writeFileSync(`./db/bins/bin-${counter}.json`,JSON.stringify(body, null, 4));
   
-  
-
-  
-  // try {
-  //   fs.writeFileSync(
-  //     `./db/object-${id}.json`,
-  //     JSON.stringify(body, null, 4)
-  //   );
-  //   fs.writeFileSync(
-  //     `./db/object-${id}.json`,
-  //     JSON.stringify(body, null, 4)
-  //   );
-  //   response.status(201).send("greet added");
-  // } catch (e) {
-  //   response.status(500).json({ message: "Error!", error: e });
-  // }
+  response.status(200).send({
+    "record": counterObj ,
+    "metadata": {
+      "id": counter,
+      "createdAt": new Date(),
+    }
+  });
 });
 
 
@@ -106,16 +57,6 @@ app.put("/api/:id", (request, response) => {
   
   response.send(body);
   
-  
-  // try {
-  //   fs.writeFileSync(
-  //     `./greets/greet-${created}.json`,
-  //     JSON.stringify(body, null, 4)
-  //   );
-  //   response.json(body);
-  // } catch (e) {
-  //   response.status(500).json({ message: "Error!", error: e });
-  // }
 });
 
 
@@ -137,16 +78,6 @@ app.put("/api", (request, response) => {
 
   response.send(JSON.stringify(body));
   
-  
-  // try {
-  //   fs.writeFileSync(
-  //     `./greets/greet-${created}.json`,
-  //     JSON.stringify(body, null, 4)
-  //   );
-  //   response.json(body);
-  // } catch (e) {
-  //   response.status(500).json({ message: "Error!", error: e });
-  // }
 });
 
 
@@ -170,40 +101,25 @@ app.delete("/api/:id", (request, response) => {
   
   
   response.send(objs);
-  // try {
-  //   fs.writeFileSync(
-  //     `./db/object-${id}.json`,
-  //     JSON.stringify(body, null, 4)
-  //   );
-  //   fs.writeFileSync(
-  //     `./db/object-${id}.json`,
-  //     JSON.stringify(body, null, 4)
-  //   );
-  //   response.status(201).send("greet added");
-  // } catch (e) {
-  //   response.status(500).json({ message: "Error!", error: e });
-  // }
+
 });
 
 
 
-// app.post("/api", (request, response) => {
-//   const { body } = request;
-//   const objs = fs.readFileSync('.db/all-objs.json',{encoding:'utf8', flag:'r'});
-//   objs = JSON.parse(objs);
-  
-//   try {
-//     fs.writeFileSync(
-//       `./db/object-${id}.json`,
-//       JSON.stringify(body, null, 4)
-//     );
-//     fs.writeFileSync(
-//       `./db/object-${id}.json`,
-//       JSON.stringify(body, null, 4)
-//     );
-//     response.status(201).send("greet added");
-//   } catch (e) {
-//     response.status(500).json({ message: "Error!", error: e });
-//   }
-// });
+app.get("/api", (request, response) => {
+  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
+  response.send(objs);
+});
 
+app.get("/api/:id", (request, response) => {
+  const { id } = request.params;
+  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
+  objs = JSON.parse(objs);
+  let data;
+  for (const obj of objs.todos) {
+    if(obj.id === Number(id)){
+       data = JSON.stringify(obj);
+    }
+  }
+  response.send(data);
+});
