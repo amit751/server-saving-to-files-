@@ -8,7 +8,7 @@ app.listen(3000 , ()=> { console.log("lissning at 3000")} );
 app.use(express.json());
 const fs = require("fs");
 
-
+// GET ALL, GET ID, -POST- , PUT, DELETE
 
 
 
@@ -32,33 +32,18 @@ app.post("/b", (request, response) => {
 });
 
 
-app.put("/api/:id", (request, response) => {
+app.put("/b/:id", (request, response) => {
   const { id } = request.params;
   const { body } = request;
- 
-  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
-  objs = JSON.parse(objs);
-  console.log(objs);
-  for (let i =0; i< objs["todos"].length ; i++) {
-    console.log(objs["todos"][i]["id"]);
-    console.log(objs["todos"][i]);
-    if(objs["todos"][i]["id"].toString() === id){
-      objs["todos"][i] = body;///////////////wrong
-       console.log(1);
-    }
+  fs.writeFileSync(`./db/bins/bin-${id}.json`,JSON.stringify(body, null, 4));
+  response.status(200).send({
+  "record": true ,
+  "metadata": {
+  "id": id,
+  "createdAt": new Date(),
   }
-  
-  fs.writeFileSync(
-    './db/all-objs.json',
-    JSON.stringify( objs, null, 4)
-  );
-  
-  
-  
-  response.send(body);
-  
+ });
 });
-
 
 
 
