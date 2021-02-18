@@ -23,6 +23,7 @@ const fs = require("fs");
 
 // BUGS
 // -post request with invalid json
+// - how to access an error property in the catch 
 
 
 
@@ -109,48 +110,86 @@ app.put("/b/:id", (request, response) => {
 
 
 app.get("/b", (request, response) => {
-  const allBinsName = fs.readdirSync( "./db/bins");
-  const binsContent = [];
-  allBinsName.forEach((binName) => {
-    binsContent.push(JSON.parse(fs.readFileSync(`./db/bins/${binName}`,{encoding:'utf8', flag:'r'})));
-  });
-  response.status(200).send(
-    {
-  "record": binsContent ,
-  "metadata": {
-  "id": "all bin",
-  "createdAt": new Date(),
-  }
+  try {
+    const allBinsName = fs.readdirSync( "./db/bins");
+    const binsContent = [];
+    allBinsName.forEach((binName) => {
+      binsContent.push(JSON.parse(fs.readFileSync(`./db/bins/${binName}`,{encoding:'utf8', flag:'r'})));
+    });
+    response.status(200).send(
+      {
+      "record": binsContent ,
+      "metadata": {
+      "id": "all bin",
+      "createdAt": new Date(),
+      }
+      });
+    } catch (e) {
+      response.status(500).send("Server internal error could not read all data, the error was:" + e);
+    }
 });
-}); 
+
 
 
 app.get("/b/:id" , (request,response) => {
-  const { id } = request.params;
-  const bin = JSON.parse(fs.readFileSync(`./db/bins/bin-${id}.json`,{encoding:'utf8', flag:'r'}));
-  console.log(bin);
-  response.status(200).send(
-    {
-      "record": bin,
-      "metadata": {
-      "id": id,
-      "createdAt": new Date(),
-      }
-  });
-  
+  try {
+    const { id } = request.params;
+    // REQUIREMENT: invalid id provided
+    if(isNaN(id)) {
+      throw ({status: 400, message: 'Bad Request - Invalid Bin Id provided'});
+    }
+    // REQUIREMENT: bin not found
+    else if(!isInBins(id)) { 
+      throw ({status: 404, message: 'Not Found - Bin not found'});
+    }
+    const bin = JSON.parse(fs.readFileSync(`./db/bins/bin-${id}.json`,{encoding:'utf8', flag:'r'}));
+    response.status(200).send(
+      {
+        "record": bin,
+        "metadata": {
+        "id": id,
+        "createdAt": new Date(),
+        }
+    });
+  } catch (e) {
+    console.log(e);
+    if(typeof(e) === 'object' && e !== null) {
+      response.status(e.status).send(e.message);
+    } else {
+      response.status(505).send(`Server internal error could not read bin-${id} data, the error was: ` + e);
+  }
+}
 });
 
+
+
 app.delete("/b/:id" , (request , response) => {
-  const { id } = request.params;
-  fs.unlinkSync(`./db/bins/bin-${id}.json`);
-  response.status(200).send(
-    {
-      "record": true,
-      "metadata": {
-      "id": id,
-      "createdAt": new Date(),
-      }
-  });
+  try {
+    const { id } = request.params;
+    // REQUIREMENT: invalid id provided
+    if(isNaN(id)) {
+      throw ({status: 400, message: 'Bad Request - Invalid Bin Id provided'});
+    }
+    // REQUIREMENT: bin not found
+    else if(!isInBins(id)) { 
+      throw ({status: 404, message: 'Not Found - Bin not found'});
+    }
+    fs.unlinkSync(`./db/bins/bin-${id}.json`);
+    response.status(200).send(
+      {
+        "record": true,
+        "metadata": {
+        "id": id,
+        "createdAt": new Date(),
+        }
+    });
+  } catch (e) {
+    if(typeof(e) === 'object' && e !== null) {
+      response.status(e.status).send(e.message);
+    } else {
+      response.status(505).send(`Server internal error could not read bin-${id} data, the error was: ` + e);
+    }
+  }
 });
 
 // returns true if bin was found by id 
