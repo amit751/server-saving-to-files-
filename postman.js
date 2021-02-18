@@ -125,6 +125,7 @@ app.put("/api/:id", (request, response) => {
 app.put("/api", (request, response) => {
   
   const { body } = request;
+  const { id } = request.params;
  
     
   console.log(body);
@@ -149,6 +150,40 @@ app.put("/api", (request, response) => {
 });
 
 
+app.delete("/api/:id", (request, response) => {
+  const { id } = request.params;
+  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
+  objs = JSON.parse(objs);
+  for (let i =0; i< objs["todos"].length ; i++) {
+    console.log(objs["todos"][i]["id"]);
+    console.log(objs["todos"][i]);
+    if(Number(objs["todos"][i]["id"]) === Number(id)){
+       delete objs["todos"][i] ;///////////////wrong
+       console.log(100);
+    }
+  }
+  fs.writeFileSync(
+    './db/all-objs.json',
+    JSON.stringify( objs, null, 4)
+  );
+  
+  
+  
+  response.send(objs);
+  // try {
+  //   fs.writeFileSync(
+  //     `./db/object-${id}.json`,
+  //     JSON.stringify(body, null, 4)
+  //   );
+  //   fs.writeFileSync(
+  //     `./db/object-${id}.json`,
+  //     JSON.stringify(body, null, 4)
+  //   );
+  //   response.status(201).send("greet added");
+  // } catch (e) {
+  //   response.status(500).json({ message: "Error!", error: e });
+  // }
+});
 
 
 
