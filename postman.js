@@ -11,7 +11,7 @@ objs = JSON.parse(objs);
 // let todos = objs["todos"];
 // console.log(todos);
 // console.log(todos.length);
-const data = {first: 0};
+const data = {first: 0 ,id:4};
 objs.todos.push(data);
 
 // fs.appendFileSync('./db/all-objs.json', 
@@ -91,9 +91,9 @@ app.put("/api/:id", (request, response) => {
   for (let i =0; i< objs["todos"].length ; i++) {
     console.log(objs["todos"][i]["id"]);
     console.log(objs["todos"][i]);
-    if(objs["todos"][i] === id){
-      objs["todos"][i] = 12;///////////////wrong
-       console.log(objs["todos"][i]);
+    if(objs["todos"][i]["id"].toString() === id){
+      objs["todos"][i] = body;///////////////wrong
+       console.log(1);
     }
   }
   
