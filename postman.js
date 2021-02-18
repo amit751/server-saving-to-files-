@@ -1,4 +1,5 @@
 const { Console } = require("console");
+const { request } = require("express");
 const express = require (`express`);
 const app = express();
 
@@ -8,7 +9,8 @@ app.listen(3000 , ()=> { console.log("lissning at 3000")} );
 app.use(express.json());
 const fs = require("fs");
 
-// GET ALL, GET ID, -POST- , PUT, DELETE
+// ToDo =  "DELETE".
+// Done =  "POST" , "PUT", "GET ALL", "GET ID".
 
 
 
@@ -42,69 +44,51 @@ app.put("/b/:id", (request, response) => {
   "id": id,
   "createdAt": new Date(),
   }
- });
+});
 });
 
 
-
-
-app.put("/api", (request, response) => {
-  
-  const { body } = request;
-  const { id } = request.params;
- 
-    
-  console.log(body);
-  
-  fs.writeFileSync(
-    './db/all-objs.json',
-    JSON.stringify(body, null, 4)
-  );
-
-  response.send(JSON.stringify(body));
-  
-});
-
-
-app.delete("/api/:id", (request, response) => {
-  const { id } = request.params;
-  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
-  objs = JSON.parse(objs);
-  for (let i =0; i< objs["todos"].length ; i++) {
-    console.log(objs["todos"][i]["id"]);
-    console.log(objs["todos"][i]);
-    if(Number(objs["todos"][i]["id"]) === Number(id)){
-       delete objs["todos"][i] ;///////////////wrong
-       console.log(100);
-    }
+app.get("/b", (request, response) => {
+  const allBinsName = fs.readdirSync( "./db/bins");
+  const binsContent = [];
+  allBinsName.forEach((binName) => {
+    binsContent.push(JSON.parse(fs.readFileSync(`./db/bins/${binName}`,{encoding:'utf8', flag:'r'})));
+  });
+  response.status(200).send(
+    {
+  "record": binsContent ,
+  "metadata": {
+  "id": "all bin",
+  "createdAt": new Date(),
   }
-  fs.writeFileSync(
-    './db/all-objs.json',
-    JSON.stringify( objs, null, 4)
-  );
-  
-  
-  
-  response.send(objs);
-
 });
+}); 
 
 
-
-app.get("/api", (request, response) => {
-  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
-  response.send(objs);
-});
-
-app.get("/api/:id", (request, response) => {
+app.get("/b/:id" , (request,response) => {
   const { id } = request.params;
-  let objs = fs.readFileSync('./db/all-objs.json',{encoding:'utf8', flag:'r'});
-  objs = JSON.parse(objs);
-  let data;
-  for (const obj of objs.todos) {
-    if(obj.id === Number(id)){
-       data = JSON.stringify(obj);
-    }
-  }
-  response.send(data);
+  const bin = JSON.parse(fs.readFileSync(`./db/bins/bin-${id}.json`,{encoding:'utf8', flag:'r'}));
+  console.log(bin);
+  response.status(200).send(
+    {
+      "record": bin,
+      "metadata": {
+      "id": id,
+      "createdAt": new Date(),
+      }
+  });
+  
+});
+
+app.delete("/b/:id" , (request , response) => {
+  const { id } = request.params;
+  fs.unlinkSync(`./db/bins/bin-${id}.json`);
+  response.status(200).send(
+    {
+      "record": true,
+      "metadata": {
+      "id": id,
+      "createdAt": new Date(),
+      }
+  });
 });
