@@ -5,8 +5,11 @@ const app = express();
 
 app.listen(3000 , ()=> { console.log("lissning at 3000")} );
 
-
+app.use('/b', (req, res, next) => {
+  setTimeout(next, 1000);
+});
 app.use(express.json());
+
 
 
 
@@ -200,3 +203,7 @@ function isInBins(id) {
   })
   return Boolean(matchBin[0]);
 }
+
+
+
+
