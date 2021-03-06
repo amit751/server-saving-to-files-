@@ -1,5 +1,5 @@
 
-
+//
 const express = require (`express`);
 const app = express();
 app.listen(3000 , ()=> { console.log("lissning at 3000")} );
@@ -9,7 +9,7 @@ app.use(express.json());
 
 
 ///experamint:
-app.get('/db', (req, res)=>{         //מה קורה שעושים בקשת גט לURL
+app.get('/db', (req, res)=>{         //URL
     res.send("tasks")
 });
 

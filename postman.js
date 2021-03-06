@@ -6,7 +6,7 @@ const app = express();
 app.listen(3000 , ()=> { console.log("lissning at 3000")} );
 
 app.use('/b', (req, res, next) => {
-  setTimeout(next, 1000);
+  setTimeout(next, 500);
 });
 app.use(express.json());
 
@@ -38,13 +38,15 @@ app.post("/b", (request, response) => {
     // REQUIREMENT: headers = {'content-type': 'application/json'}
     if (!('content-type' in request.headers && request.headers['content-type'] === 'application/json')) {
       throw ({status: 400, message: 'Bad Request - Expected Content-Type to be application/json'});
+      
       // REQUIREMENT: body not empty
     } else if (JSON.stringify(body) === JSON.stringify({})) {
         throw ({status: 400, message: 'Bad Request - Bin cannot be blank'});
+        
     }
 
      console.log(request.body);
-      let counterObj = JSON.parse(fs.readFileSync('./db/counter.json',{encoding:'utf8', flag:'r'}));
+      let counterObj = JSON.parse(fs.readFileSync('./db/counter5.json',{encoding:'utf8', flag:'r'}));
       counterObj["id"] +=  1 ;
       const counter = counterObj["id"];
 
@@ -62,7 +64,7 @@ app.post("/b", (request, response) => {
     if(typeof(e) === 'object' && e !== null) {
       response.status(e.status).send(e.message);
     } else {
-      response.status(500).send(e);
+      response.status(422).send({e});
     }
   }
 });

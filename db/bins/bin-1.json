@@ -1,3 +1,40 @@
 {
-    "test": ""
+    "my-todo": [
+        {
+            "id": 0,
+            "text": "dfgdf",
+            "priority": "1",
+            "date": "20-2-2021  1:16:04",
+            "liClass": "default",
+            "liHtml": "<div class=\"todo-container 0\"><span class=\"todo-created-at\">20-2-2021  1:16:04</span><span class=\"todo-text\">dfgdf</span><span class=\"todo-priority\">1</span><span class=\"buttons-container\"><button class=\"delete\">delete</button><button class=\"mark\">mark</button></span></div>",
+            "status": "deleted"
+        },
+        {
+            "id": 1,
+            "text": "dfgdf",
+            "priority": "1",
+            "date": "20-2-2021  1:16:51",
+            "liClass": "default",
+            "liHtml": "<div class=\"todo-container 1\"><span class=\"todo-created-at\">20-2-2021  1:16:51</span><span class=\"todo-text\">dfgdf</span><span class=\"todo-priority\">1</span><span class=\"buttons-container\"><button class=\"delete\">delete</button><button class=\"mark\">mark</button></span></div>",
+            "status": "deleted"
+        },
+        {
+            "id": 2,
+            "text": "dfgdf",
+            "priority": "5",
+            "date": "20-2-2021  1:17:01",
+            "liClass": "default",
+            "liHtml": "<div class=\"todo-container 2\"><span class=\"todo-created-at\">20-2-2021  1:17:01</span><span class=\"todo-text\">dfgdf</span><span class=\"todo-priority\">5</span><span class=\"buttons-container\"><button class=\"delete\">delete</button><button class=\"mark\">mark</button></span></div>"
+        },
+        {
+            "id": 3,
+            "text": "dfgdf",
+            "priority": "2",
+            "date": "20-2-2021  1:17:05",
+            "liClass": "default",
+            "liHtml": "<div class=\"todo-container 3\"><span class=\"todo-created-at\">20-2-2021  1:17:05</span><span class=\"todo-text\">dfgdf</span><span class=\"todo-priority\">2</span><span class=\"buttons-container\"><button class=\"delete\">delete</button><button class=\"mark\">mark</button></span></div>"
+        }
+    ],
+    "qounter": 2,
+    "identfy": 4
 }
